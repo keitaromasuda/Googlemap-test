@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>不動産店舗の担当エリア</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAfTX_eZiHYcZ5ugTKo4j9s4TfXauqQoLY"></script>
+    <script>
+        function checkCredentials() {
+            var username = prompt("Enter your username:");
+            var password = prompt("Enter your password:");
+            var validUsername = "gmap";
+            var validPassword = "test";
+
+            if (username === validUsername && password === validPassword) {
+                document.getElementById("map").style.display = "block";
+                initMap();
+            } else {
+                alert("Incorrect username or password!");
+                window.location.href = "https://www.google.com"; // Redirect on incorrect credentials
+            }
+        }
+
+        function initMap() {
+            // 地図の初期位置とズームレベルを設定
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 35.658581, lng: 139.745433 },
+                zoom: 13
+            });
+
+            // 各店舗の担当エリアデータ
+            var areas = [
+                {
+                    name: "麻布センター",
+                    coordinates: [
+                        { lat: 35.649000, lng: 139.735000 },
+                        { lat: 35.653000, lng: 139.741000 },
+                        { lat: 35.658000, lng: 139.745000 },
+                        { lat: 35.662000, lng: 139.742000 },
+                        { lat: 35.666000, lng: 139.735000 },
+                        { lat: 35.662000, lng: 139.730000 },
+                        { lat: 35.657000, lng: 139.730000 },
+                        { lat: 35.653000, lng: 139.734000 }
+                    ],
+                    color: '#FF0000'
+                },
+                {
+                    name: "六本木センター",
+                    coordinates: [
+                        { lat: 35.664000, lng: 139.733000 },
+                        { lat: 35.668000, lng: 139.738000 },
+                        { lat: 35.672000, lng: 139.742000 },
+                        { lat: 35.675000, lng: 139.738000 },
+                        { lat: 35.671000, lng: 139.732000 },
+                        { lat: 35.667000, lng: 139.728000 },
+                        { lat: 35.663000, lng: 139.729000 }
+                    ],
+                    color: '#0000FF'
+                }
+                // 他のエリアも同様に追加
+            ];
+
+            // 各エリアを地図に表示
+            areas.forEach(function (area) {
+                var polygon = new google.maps.Polygon({
+                    paths: area.coordinates,
+                    strokeColor: area.color,
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: area.color,
+                    fillOpacity: 0.35
+                });
+                polygon.setMap(map);
+
+                // ポリゴンにクリックイベントを追加して、エリア名を表示
+                google.maps.event.addListener(polygon, 'click', function () {
+                    var infoWindow = new google.maps.InfoWindow({
+                        content: area.name
+                    });
+                    infoWindow.setPosition(area.coordinates[0]);
+                    infoWindow.open(map);
+                });
+            });
+        }
+    </script>
+</head>
+
+<body onload="checkCredentials()">
+    <div id="map" style="height: 500px; width: 100%; display:none;"></div>
+</body>
+
+</html>
